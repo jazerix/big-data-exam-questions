@@ -1,0 +1,58 @@
+# Flume 
+
+## Questions
+
+- What are agents?
+  - Agents are long-lived java processes that either collect information and forwards it to other agents, or aggregate data received from other agents. 
+- What are sources in flume?
+  - Essentially a place a flume agent should listen for events, such as a directory change
+- What are sinkins in flume?
+  - A place to ouput (and somtimes aggregate) the input data
+- What is the difference between flume and kafka?
+  - Kafka is input / output agnostic, whereas with flume you need to specify a source and a sink.
+- What is a spooling agent?
+  - An agent that monitors a directory for new files. Each line in the file is treated as a separate event.
+- Is flume event driven?
+  - Yes
+- Which is better at importing unstructured data, sqoop or flume?
+  - Flume
+- Can flume be used for event streaming?
+  - Yes
+- How does flume mark files are being processed?
+  - Flume appends the .COMPLETE file extension to the file.
+- How does transactions work?
+  - When flume processes a source, it'll create a transaction. The transaction will be rolled back if for some reason the souce couldn't delivered to the channel.
+- What are channels in flume?
+  - Channels are the intermediate step between a source and a sink.
+- What is the downside to transactions?
+  - Dublicates can occur, if a transaction fails in the middle, the events prior to the failure will already have been delivered to the channel.
+- What does "at-least-once" refer to, in a an agent context?
+  - Data is going to be delivered at least once. 
+- What is batching?
+  - To minimize file reads, flume will try and chunk the data into batches.
+- What is the HDFS sink?
+  - A sink that allows a channel to output directly to HDFS. 
+- What does hdfs.rollInterval, hdfs.rollSize and hdfs.rollCount refer to?
+  - In a hdfs sink, the hdfs.rollInterval is the amount of time in seconds that flume will keep a file open, the rollSize is the size of the output file. The rollCount refers to the events. Once one of these are hit, flume will close the file.
+- What is partitioning?
+  - Instead of storing the output in a huge file, they can be partitioned. For example, a partition could be a day of month. 
+- Why should you store the output in binary?
+  - Uses less space than text files. 
+- What is a sink serializer?
+  - A process that allows the output to be saved in a speficic format, such as avro.
+- What two fields does an avro event consist of?
+  - headers (map) and body (byte)
+- What is fan out?
+  - Fan out allows one agent to have one source but multiple sinks.
+- Given an agent with N sinks. How many transactions will be created during an event?
+  - N transactions. Should one fail, it won't be marked as completed and retried later for all N sinks.
+- What are optional channels?
+  - Channels that are "ok" to fail, in which case they won't be retried.
+- How do we scale flume?
+  - Through tiers: Tier 1 agents can sit at the forefront, and send data to Tier 2 agents that can aggregate the data before inputting into HDFS.
+- What is the default capacity of a channel?
+  - One million,
+- What happens if a channel reaches capacity?
+  - It will stop accepting events, and they will be lost.
+- What are sink groups?
+  - Node balancing for agents, allows multiple sinks to be treated as one. 

@@ -56,9 +56,9 @@ The number of maps is usually driven by the total size of the inputs, that is, t
   - YARN
 - What are input splits?
   - When a map-reduce task is initiated each mapping is mapped into a split of a fixed size
-- Why happens if the (input) splits are too small?
+- What happens if the (input) splits are too small?
   - Managing the splits starts creating a substantial overhead
-- why happens if the (input) splits are too large?
+- what happens if the (input) splits are too large?
   - The input may not be as effectily read concurrently. Small splits allows the syster to better run the mapping in parallel.
 - Where are (input) splits mapped at?
   - Hadoop will do its best to map the splits on the same node as the data is located at. If nodes are busy, a node on the same rack can be chosen. 
