@@ -1,0 +1,68 @@
+# Kafka
+
+## Questions
+
+- Event consists of what?
+  - A notification and a state. State is typically in a format like JSON, serialized in some format.
+- How are events structured in kafka?
+  - Key-value pairs. The value is typically structed and can represent objects in your application. The key, can be complex objects but often primitives like strings and integers. Not usually a primary key. 
+- What does the kafka key in an event refer to?
+  - Anything, they are not unique. They typically represent an id from the input system, like the id of an order.
+- Is Kafka strictly typed?
+  - Kafka is losely typed, in the sense that the values can be anything
+- What are topics?
+  - Topic is a way to category events. Can be thought of as logs of events.
+- What is the idea behind topics?
+  - Create order, allow you to filter from other topics to another.
+- Can events be mutated?
+  - No, they are always appended. Events are immutable.
+- How do you lookup events?
+  - Seek by offset and scan forward - they are not indexed.
+- How durable are topics?
+  - Unlike queues, where messages are normally consumes, messages in kafka, don't go anywhere - they can however set to expire. The messages are stored on the disk.
+- What are partitions?
+  - Partitions are a way of placing messages of topics on multiple nodes.
+- Where do messages go when a topic is partitioned?
+  - If the incoming message has no key, it will be distributed round robin, to different partitioned. With key: we can no order the input. Messages with the same key, can for example always be placed on the same partition, ensuring they are in the correct order.
+- Given a partitioned topic, what happens if you publish a message without a key?
+  - They get distributed round-robin style between the partitions.
+- Given a partitioned topic, what happens if you publish a message with a key?
+  - Depending on the configuration, they messages with the same id can be hashed and then run a HASH % partitions, to ensure they always get the same partition.
+- Why is it benefitial to have messages with the same key on the same partition?
+  - It ensures that messages are always in the correct order.
+- What are brokers?
+  - Kafks processes are called brokers. They can be containers but also processes on other machines.
+- What is the responsibiltiy of brokers?
+  - They manage partitions, handle read and write and manage replication across other brokers.
+- What is a follower partiation?
+  - They are copies of a partition on other brokers
+- What is a leader partition?
+  - Main partition. 
+- How many leader and followers are there for a given partition?
+  - There is always 1 leader and N followers.
+- Where is data produced and read from?
+  - Data is by default produced to the leader.
+- Who is responsible for replication between a given leader and its followers?
+  - Themselves, they communicate to ensure a replication fector is met.
+- Who decides where partition given message should be placed on?
+  - It is the responsibility of the producer.
+- Do we subsribe solely to one topic when creating a consumer?
+  - No, we can subsribe to multiple or event filter the ones through RegEx.
+- What happens if one consumer application subscribes to a topic?
+  - It will receive all the messages published to that topic
+- What is a rebalancing process?
+  - A process of which partitions are distributed between consumers in the same consumer group that are trying to read from the same topic. It will get triggered every time the consumer group gets updated. 
+- Can you have more consumers in a consumer group than partitions?
+  - Yes, but any consumer exceeding the partition count will be idle until rebalancing.
+- How is ordering ensured when multiple consumers are in the same consumer group?
+  - If the produced data has a key, messages will always be on the same partition, which ensures that the same consumer is always getting the messages, thus ordered.
+- What is the offset?
+  - The offset is created per consumer group, and allows the broker to keep track of how far each consumer is.
+- What is stream processing?
+  - Allows us to filter, group aggregate, join etc streamed data.
+- What is ksqlDB
+  - A database specialized for event process streaming
+- How is requests done in ksqlDB
+  - ksqlDB allows users to query a stream in a form of SQL, and query the results in SQL.
+- How do you communicate with ksqlDB
+  - ksqlDB exposes a rest api where SQL can be sent.
