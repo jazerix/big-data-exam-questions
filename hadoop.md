@@ -7,7 +7,7 @@
 - Why are larger block sizes preffered?
     - It reduces seek time and we generally work with larger files
 - What is the default block size of HDFS?
-  - 64 MB
+  - 128 MB
 - Default replica factor?
   - 3
 - Are blocks placed on the same node?
